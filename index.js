@@ -13,8 +13,7 @@ var inRange = [];
 
 // Currently hard-coded list of dogs and their device IDs
 var dogs = {
-  '405ecc6487f44812a3b9718474eb5c83': 'watson',
-  'bf978ce4d9734185a4c58d40a50365b6': 'barkley'
+  '2ca25063f14a41be964a97924d989eb4': 'watson'
 }
 
 noble.on('stateChange', function(state) {
@@ -34,6 +33,11 @@ noble.on('discover', function(peripheral) {
   }
 
   var id = peripheral.id;
+
+  // if (peripheral.advertisement.manufacturerData) {
+  //   console.log(peripheral.advertisement.manufacturerData);
+  //   console.log(peripheral.uuid);
+  // }
   var entered = !inRange[id];
 
   if (entered) {
