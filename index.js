@@ -3,6 +3,8 @@ var noble = require('noble');
 var request = require('request-json');
 
 var apiURL = process.env.APIURL;
+var hydrantLocation = process.env.LOCATION;
+
 var client = request.createClient(apiURL);
 
 // Variables to help us increase accuracy
@@ -12,9 +14,9 @@ var EXIT_GRACE_PERIOD = 2000; // milliseconds
 var inRange = [];
 
 // Currently hard-coded list of dogs and their device IDs
-var dogs = {
-  '2ca25063f14a41be964a97924d989eb4': 'watson'
-}
+var dogs = [
+  '2ca25063f14a41be964a97924d989eb4'
+]
 
 noble.on('stateChange', function(state) {
   if (state === 'poweredOn') {
@@ -33,11 +35,6 @@ noble.on('discover', function(peripheral) {
   }
 
   var id = peripheral.id;
-
-  // if (peripheral.advertisement.manufacturerData) {
-  //   console.log(peripheral.advertisement.manufacturerData);
-  //   console.log(peripheral.uuid);
-  // }
   var entered = !inRange[id];
 
   if (entered) {
@@ -67,8 +64,8 @@ function updateAPI(deviceID) {
 
   payload = {
     event: {
-      dog: dogs[deviceID],
-      inOffice: true
+      deviceID: deviceID,
+      location: hydrantLocation
     }
   }
 
