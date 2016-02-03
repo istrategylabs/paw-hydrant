@@ -1,9 +1,8 @@
 var noble = require('noble');
 var request = require('request-json');
 
-//var apiURL = process.env.APIURL;
-var LOCATION = 'kitchen';
-var apiURL = 'http://47b7979c.ngrok.com';
+var apiURL = process.env.APIURL;
+var LOCATION = process.env.LOCATION;
 var client = request.createClient(apiURL);
 
 // Variables to help us increase accuracy
