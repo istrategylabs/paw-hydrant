@@ -1,4 +1,4 @@
-FROM node:4.2.3
+FROM resin/armv7hf-node
 
 RUN apt-get update && apt-get install -y bluetooth bluez libbluetooth-dev libudev-dev
 

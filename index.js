@@ -2,9 +2,9 @@ var request = require('request');
 var noble = require('noble');
 var request = require('request-json');
 
-var apiURL = process.env.APIURL;
-var hydrantLocation = process.env.LOCATION;
-
+//var apiURL = process.env.APIURL;
+var LOCATION = process.env.ENVIRONMENT;
+var apiURL = 'http://requestb.in/11gduk11'
 var client = request.createClient(apiURL);
 
 // Variables to help us increase accuracy
@@ -15,7 +15,7 @@ var inRange = [];
 
 // Currently hard-coded list of dogs and their device IDs
 var dogs = [
-  '2ca25063f14a41be964a97924d989eb4'
+  "c3:63:96:6d:58:99"
 ]
 
 noble.on('stateChange', function(state) {
@@ -34,43 +34,24 @@ noble.on('discover', function(peripheral) {
     return;
   }
 
-  var id = peripheral.id;
-  var entered = !inRange[id];
+  var id = peripheral.address;
+  updateAPI(id);
 
-  if (entered) {
-    // The dog has entered the device's radius...mark as 'entered'
-    inRange[id] = {
-      peripheral: peripheral
-    };
-
-    // Update the API with the information as well
-    updateAPI(id);
-  }
-
-  inRange[id].lastSeen = Date.now();
 });
 
-// This is how we will tell if someone has exited
-setInterval(function() {
-  for (var id in inRange) {
-    if (inRange[id].lastSeen < (Date.now() - EXIT_GRACE_PERIOD)) {
-      var peripheral = inRange[id].peripheral;
-      delete inRange[id];
-    }
-  }
-}, EXIT_GRACE_PERIOD / 2);
 
 function updateAPI(deviceID) {
 
   payload = {
     event: {
-      deviceID: deviceID,
-      location: hydrantLocation
+      device: deviceID,
+      location: LOCATION
     }
   }
 
-  if (deviceID in dogs) {
-    client.post('event/', payload, function(err, res, body) {
+  if (dogs.indexOf(deviceID) > -1) {
+    console.log("POSTING EVENT");
+    client.post(apiURL, payload, function(err, res, body) {
         return console.log(res.statusCode);
     });
   }
