@@ -30,6 +30,7 @@ function updateAPI() {
 
 noble.on('stateChange', function(state) {
   if (state === 'poweredOn') {
+    console.log("Device has started, looking for device IDs");
     client.get(apiURL + '/api/devices', function(err, res, devices) {
       console.log(res.statusCode, devices);
       listenDeviceIds = devices;
@@ -50,6 +51,7 @@ noble.on('discover', function(peripheral) {
   }
 
   var deviceId = peripheral.address;
+  console.log("Device discovered: ", peripheral.address);
   if (listenDeviceIds.indexOf(deviceId) > -1 && seenDeviceIds.indexOf(deviceId) === -1) {
     // queue event to be sent if we recognize the device and have not queued an event yet
     seenDeviceIds.push(deviceId);
