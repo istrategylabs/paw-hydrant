@@ -5,6 +5,8 @@ RUN apt-get update && apt-get install -y bluetooth bluez libbluetooth-dev libude
 RUN mkdir /code
 WORKDIR /code
 
+ENV INITSYSTEM on
+
 ADD package.json /code/
 RUN npm install
 
