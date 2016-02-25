@@ -18,8 +18,6 @@ var eventQueue = [];
 // list of device ids to listen for
 var listenDeviceIds = [];
 
-console.log("WILL THIS PRINT!?!?!?!?!");
-
 function updateAPI() {
   // send event queue to server
   console.log('POSTing sending events', eventQueue);
