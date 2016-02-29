@@ -35,6 +35,7 @@ noble.on('stateChange', function(state) {
   if (state === 'poweredOn') {
     console.log("Device has started, looking for device IDs");
     client.get(apiURL + '/api/devices', function(err, res, devices) {
+      console.log(err);
       console.log(res.statusCode, devices);
       listenDeviceIds = devices;
 
