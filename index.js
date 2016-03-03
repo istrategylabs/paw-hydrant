@@ -21,11 +21,14 @@ var listenDeviceIds = [];
 function updateAPI() {
   // send event queue to server
   console.log('POSTing sending events', eventQueue);
-  client.post(apiURL + '/api/event', { events: eventQueue }, function(err, res) {
-    console.log(res.statusCode);
-    eventQueue.length = 0;
-    seenDeviceIds.length = 0;
-  });
+
+  if (eventQueue.length > 0) {
+    client.post(apiURL + '/api/event', { events: eventQueue }, function(err, res) {
+      console.log(res.statusCode);
+      eventQueue.length = 0;
+      seenDeviceIds.length = 0;
+    });
+  }
 }
 
 noble.on('stateChange', function(state) {
@@ -60,7 +63,7 @@ noble.on('discover', function(peripheral) {
       location: LOCATION,
       time: Date.now()
     };
-    eventQueue.unshift(eventPayload);
+    eventQueue.push(eventPayload);
   } else if (listenDeviceIds.indexOf(deviceId) > -1 && seenDeviceIds.indexOf(deviceId) !== -1) {
     console.log('already seen', deviceId);
   }
