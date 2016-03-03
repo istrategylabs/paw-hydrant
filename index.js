@@ -55,8 +55,8 @@ noble.on('discover', function(peripheral) {
   }
 
   var deviceId = peripheral.address;
-  console.log("Device discovered: ", peripheral.address);
   if (listenDeviceIds.indexOf(deviceId) > -1 && seenDeviceIds.indexOf(deviceId) === -1) {
+    console.log("Device discovered: ", peripheral.address);
     // queue event to be sent if we recognize the device and have not queued an event yet
     seenDeviceIds.push(deviceId);
     var eventPayload = {
