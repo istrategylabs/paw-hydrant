@@ -50,9 +50,6 @@ noble.on('stateChange', function(state) {
 });
 
 noble.on('discover', function(peripheral) {
-  if (peripheral.rssi < RSSI_THRESHOLD) {
-    return;
-  }
 
   var deviceId = peripheral.address;
   if (listenDeviceIds.indexOf(deviceId) > -1 && seenDeviceIds.indexOf(deviceId) === -1) {
