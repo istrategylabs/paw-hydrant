@@ -8,6 +8,7 @@ var client = request.createClient(apiURL);
 // Variables to help us increase accuracy
 var RSSI_THRESHOLD    = -90;
 var API_UPDATE_INTERVAL = 5000; // milliseconds
+var SCAN_UPDATE_INTERVAL = 300000; // 5 minutes
 
 // devices the hydrant has seen since last api update
 var seenDeviceIds = [];
@@ -20,15 +21,21 @@ var listenDeviceIds = [];
 
 function updateAPI() {
   // send event queue to server
-  console.log('POSTing sending events', eventQueue);
+  // console.log('POSTing sending events', eventQueue);
 
   if (eventQueue.length > 0) {
     client.post(apiURL + '/api/event', { events: eventQueue }, function(err, res) {
-      console.log(res.statusCode);
+      // console.log(res.statusCode);
       eventQueue.length = 0;
       seenDeviceIds.length = 0;
     });
   }
+}
+
+function kickScan() {
+  noble.stopScanning();
+  noble.startScanning([], true);
+  console.log("Restarting scan...");
 }
 
 noble.on('stateChange', function(state) {
@@ -42,6 +49,7 @@ noble.on('stateChange', function(state) {
       console.log('scanning...');
       noble.startScanning([], true);
       setInterval(updateAPI, API_UPDATE_INTERVAL);
+      setInterval(kickScan, SCAN_UPDATE_INTERVAL);
     });
   } else {
     console.log("Error...not connected or cannot connect");
@@ -49,8 +57,15 @@ noble.on('stateChange', function(state) {
   }
 });
 
-noble.on('discover', function(peripheral) {
+noble.on('scanStop', function() {
+  console.log("Scanning has stopped");
+});
 
+noble.on('warning', function(message) {
+  console.log("Warning triggered...message: ", message);
+});
+
+noble.on('discover', function(peripheral) {
   var deviceId = peripheral.address;
   if (listenDeviceIds.indexOf(deviceId) > -1 && seenDeviceIds.indexOf(deviceId) === -1) {
     console.log("Device discovered: ", peripheral.address);
@@ -63,6 +78,6 @@ noble.on('discover', function(peripheral) {
     };
     eventQueue.push(eventPayload);
   } else if (listenDeviceIds.indexOf(deviceId) > -1 && seenDeviceIds.indexOf(deviceId) !== -1) {
-    console.log('already seen', deviceId);
+    // console.log('already seen', deviceId);
   }
 });
