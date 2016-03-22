@@ -21,11 +21,11 @@ var listenDeviceIds = [];
 
 function updateAPI() {
   // send event queue to server
-  // console.log('POSTing sending events', eventQueue);
+  console.log('POSTing sending events', eventQueue);
 
   if (eventQueue.length > 0) {
     client.post(apiURL + '/api/event', { events: eventQueue }, function(err, res) {
-      // console.log(res.statusCode);
+      console.log(res.statusCode);
       eventQueue.length = 0;
       seenDeviceIds.length = 0;
     });
