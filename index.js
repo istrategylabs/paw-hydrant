@@ -7,8 +7,10 @@ var client = request.createClient(apiURL);
 
 // Variables to help us increase accuracy
 var RSSI_THRESHOLD    = -90;
-var API_UPDATE_INTERVAL = 5000; // milliseconds
-var SCAN_UPDATE_INTERVAL = 300000; // 5 minutes
+var API_UPDATE_INTERVAL = process.env.API_UPDATE_INTERVAL;
+
+// How often to restart the scan. This is mostly a hack to fix an issue where devices would stop being detected.
+var SCAN_UPDATE_INTERVAL = process.env.SCAN_UPDATE_INTERVAL;
 
 // devices the hydrant has seen since last api update
 var seenDeviceIds = [];
@@ -57,14 +59,6 @@ noble.on('stateChange', function(state) {
   }
 });
 
-noble.on('scanStop', function() {
-  console.log("Scanning has stopped");
-});
-
-noble.on('warning', function(message) {
-  console.log("Warning triggered...message: ", message);
-});
-
 noble.on('discover', function(peripheral) {
   var deviceId = peripheral.address;
   if (listenDeviceIds.indexOf(deviceId) > -1 && seenDeviceIds.indexOf(deviceId) === -1) {
@@ -78,6 +72,6 @@ noble.on('discover', function(peripheral) {
     };
     eventQueue.push(eventPayload);
   } else if (listenDeviceIds.indexOf(deviceId) > -1 && seenDeviceIds.indexOf(deviceId) !== -1) {
-    // console.log('already seen', deviceId);
+    console.log('already seen', deviceId);
   }
 });
