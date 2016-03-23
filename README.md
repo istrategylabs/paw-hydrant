@@ -1,5 +1,6 @@
 # PAW Hydrant: BTLE Scanner
 
+![hydrant](hydrant.png)
 
 ## Up-and-running
 
