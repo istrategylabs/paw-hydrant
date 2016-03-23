@@ -36,3 +36,7 @@ The models used to create the enclosures for the "Kibble" and the "Hydrant" can 
 ### Deployment
 
 The "hydrant" can be deployed to any hardware device than can run a docker container. We deployed to our fleet using [Resin.io](resin.io) and highly recommend it.
+
+## Extending
+
+The Hydrant is built to work directly with the [Paw dashboard and API](https://github.com/istrategylabs/paw). You could easily clone both project and spin up your own version of the system, or you can rip out the hardcoded API endpoints and payload to have the Hydrant call any API you desire.
